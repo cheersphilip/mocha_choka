@@ -252,19 +252,19 @@ var update = function (modifier) {
 
 		if (38 in keysDown || 87 in keysDown || 119 in keysDown) { // Player holding up, W or w
 			hero.y -= hero.speed * modifier * 4;
-			hero.x += hero.speed * modifier * 7;
+			// hero.x += hero.speed * modifier * 7;
 		}
 		if (40 in keysDown || 83 in keysDown || 115 in keysDown) { // Player holding down, S or s
 			hero.y += hero.speed * modifier * 4;
-			hero.x -= hero.speed * modifier * 7;
+			// hero.x -= hero.speed * modifier * 7;
 		}
 		if (37 in keysDown || 65 in keysDown || 97 in keysDown) { // Player holding left, A or a
 			hero.x -= hero.speed * modifier * 7;
-			hero.y -= hero.speed * modifier * 4;
+			// hero.y -= hero.speed * modifier * 4;
 		}
 		if (39 in keysDown || 68 in keysDown || 100 in keysDown) { // Player holding right, D or d
 			hero.x += hero.speed * modifier * 7;
-			hero.y += hero.speed * modifier * 4;
+			// hero.y += hero.speed * modifier * 4;
 		}
 
 		if (88 in keysDown || 120 in keysDown || 27 in keysDown) { // Player holding X, x or Esc
