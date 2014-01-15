@@ -86,6 +86,180 @@ addEventListener("keyup", function (e) {
 }, false);
 
 
+/////////////////////////////////////////////////////
+
+
+//**********************************//
+// var FrameTimer = function() {
+//     this._lastTick = (new Date()).getTime();
+// };
+
+// FrameTimer.prototype = {
+//     getSeconds: function() {
+//         var seconds = this._frameSpacing / 1000;
+//         if(isNaN(seconds)) {
+//             return 0;
+//         }
+
+//         return seconds;
+//     },
+
+//     tick: function() {
+//         var currentTick = (new Date()).getTime();
+//         this._frameSpacing = currentTick - this._lastTick;
+//         this._lastTick = currentTick;
+//     }
+// };
+
+//**********************************//
+
+var SpriteSheet = function(data) {
+    this.load(data);
+};
+
+SpriteSheet.prototype = {
+    _sprites: [],
+    _width: 0,
+    _height: 0,
+
+    load: function(data) {
+        this._height = data.height;
+        this._width = data.width;
+        this._sprites = data.sprites;
+    },
+
+    getOffset: function(spriteName) {
+        for(var i = 0, len = this._sprites.length; i < len; i++) {
+            var sprite = this._sprites[i];
+
+            if(sprite.name == spriteName) {
+                return {
+                    x: (i * this._width) + (sprite.x||0),
+                    y: (sprite.y||0),
+                    width: this._width,
+                    height: this._height
+                };
+            }
+        }
+        
+        return null;
+    }
+};
+
+//**********************************/
+
+var Animation = function(data, sprites) {
+    this.load(data);
+    this._sprites = sprites;
+};
+
+Animation.prototype = {
+    _frames: [],
+    _frame: null,
+    _frameDuration: 0,
+
+    load: function(data) {
+        this._frames = data;
+        this._frameIndex = 0;
+        this._frameDuration = data[0].time;
+    },
+
+    animate: function(deltaTime) {
+        this._frameDuration -= deltaTime;
+
+        if(this._frameDuration <= 0) {
+            this._frameIndex++;
+            if(this._frameIndex == this._frames.length) {
+                this._frameIndex = 0;
+            }
+
+            this._frameDuration = this._frames[this._frameIndex].time;
+        }
+    },
+
+    getSprite: function() {
+        return this._sprites.getOffset(this._frames[this._frameIndex].sprite);
+    }
+};
+
+//**********************************//
+
+var myVar, walk, doWalk;
+
+// window.onload = function() {
+//             var timer = new FrameTimer();
+//             timer.tick();
+ 
+var sprites = new SpriteSheet({
+    width: 30,
+    height: 60,
+    sprites: [
+        { name: 'stand', x: 112, y: 173  },
+        { name: 'walk_1', x: 125, y: 172 },
+        { name: 'walk_2', x: 125, y: 173 },
+        { name: 'walk_3', x: 126, y: 173 },
+        { name: 'walk_4', x: 121, y: 171 },
+        { name: 'walk_5', x: 123, y: 172 },
+        { name: 'walk_6', x: 124, y: 172  }
+    ]
+});
+            
+            //var ctx = document.getElementById('canvas').getContext('2d');
+            
+walk = new Animation([
+        { sprite: 'stand', time: 0.05 },
+        { sprite: 'walk_1', time: 0.1 },
+        { sprite: 'walk_2', time: 0.15 },
+        { sprite: 'walk_3', time: 0.1 },
+        { sprite: 'stand', time: 0.05 },
+        { sprite: 'walk_4', time: 0.1 },
+        { sprite: 'walk_5', time: 0.12 },
+        { sprite: 'walk_6', time: 0.1 },
+        { sprite: 'stand', time: 0.05 },
+        { sprite: 'walk_1', time: 0.1 },
+        { sprite: 'walk_2', time: 0.15 },
+        { sprite: 'walk_3', time: 0.1 },
+        { sprite: 'stand', time: 0.05 },
+        { sprite: 'walk_4', time: 0.1 },
+        { sprite: 'walk_5', time: 0.12 },
+        { sprite: 'walk_6', time: 0.1 },
+        { sprite: 'stand', time: 0.05 }
+], sprites);
+            
+var s=-30;
+            
+doWalk = function(delta2){
+
+        walk.animate(delta2); 
+        var frame = walk.getSprite();
+        ctx.drawImage(kunioImage, frame.x, frame.y, 30, 60, s, canvas.height/3, 30, 60);
+        
+        s++; //move the animation to the right
+        if (s > canvas.width+30){s=-30;} //this is so that it starts again from the left hand side
+
+        if(walk._frameIndex === walk._frames.length-1) {
+          clearInterval(myVar);
+          walk._frameIndex = 0;
+        }
+};
+
+  
+// jacko images
+var jackoReady = false;
+var kunioImage = new Image();
+kunioImage.onload = function () {
+	jackoReady = true;
+};
+kunioImage.src = 'http://dev.philipwatson.co.uk/images/37794.png';
+
+
+
+/////////////////////////////////////////////////////
+
+
+
+
+
 
 // Reset the game when the player loses all their lives or time runs out
 var reset = function () {
@@ -252,6 +426,7 @@ var update = function (modifier) {
 
 		if (38 in keysDown || 87 in keysDown || 119 in keysDown) { // Player holding up, W or w
 			hero.y -= hero.speed * modifier * 4;
+<<<<<<< HEAD
 			// hero.x += hero.speed * modifier * 7;
 		}
 		if (40 in keysDown || 83 in keysDown || 115 in keysDown) { // Player holding down, S or s
@@ -265,6 +440,17 @@ var update = function (modifier) {
 		if (39 in keysDown || 68 in keysDown || 100 in keysDown) { // Player holding right, D or d
 			hero.x += hero.speed * modifier * 7;
 			// hero.y += hero.speed * modifier * 4;
+=======
+		}
+		if (40 in keysDown || 83 in keysDown || 115 in keysDown) { // Player holding down, S or s
+			hero.y += hero.speed * modifier * 4;
+		}
+		if (37 in keysDown || 65 in keysDown || 97 in keysDown) { // Player holding left, A or a
+			hero.x -= hero.speed * modifier * 7;
+		}
+		if (39 in keysDown || 68 in keysDown || 100 in keysDown) { // Player holding right, D or d
+			hero.x += hero.speed * modifier * 7;
+>>>>>>> Integrated time-based animation into the game loop
 		}
 
 		if (88 in keysDown || 120 in keysDown || 27 in keysDown) { // Player holding X, x or Esc
@@ -334,7 +520,7 @@ var update = function (modifier) {
 
 
 // Draw everything
-var render = function () {
+var render = function (delta1) {
 
 	//start page
 
@@ -469,6 +655,16 @@ var render = function () {
 			ctx.drawImage(heroImage, hero.x, hero.y, 40, 43);
 		}
 
+
+//////////////////////////////////
+
+        if (jackoReady) {
+        	doWalk(delta1);
+        };
+
+//////////////////////////////////
+
+
 	}; //end of 'else'
 
 };
@@ -479,9 +675,14 @@ var main = function () {
 	var delta = now - then;
 	canvas.width = canvas.width;
 	update(delta / 1000); //delta seems to return an integer of roughly 8 - 24, depending on CPU speed
-	render();
+	render(delta / 1000);
 	then = now;
 };
+
+
+
+
+
 
 
 // Let's play this game!
